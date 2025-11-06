@@ -37,6 +37,114 @@ public class ReliableChannel {
         }
         send(pkt, pinnedPeer);
     }
+
+    /**
+     * Receive the next packet, ensuring its type matches 'expected'.
+     * Pins TID on first inbound packet. Rejects unknown TIDs with ERROR 5.
+     *
+     * @param expected The concrete packet class expected next (e.g., ACKPacket.class).
+     * @param timeoutMs Socket receive timeout in milliseconds (use a positive value).
+     * @return A parsed packet of type T.
+     * @throws IOException on socket errors or timeout.
+     * @throws ProtocolException if the opcode doesn't match the expected class.
+     */
+    public <T extends TFTPPacket> T receive(Class<T> expected, int timeoutMs)
+            throws IOException, ProtocolException {
+
+        int previous = socket.getSoTimeout();
+        if (timeoutMs <= 0) timeoutMs = DEFAULT_TIMEOUT_MS;
+        socket.setSoTimeout(timeoutMs);
+
+        try {
+            for (;;) {
+                byte[] buf = new byte[MAX_TFTP_DATAGRAM];
+                DatagramPacket dp = new DatagramPacket(buf, buf.length);
+                socket.receive(dp);
+
+                SocketAddress source = dp.getSocketAddress();
+
+                if (pinnedPeer == null) {
+                    pinnedPeer = source;
+                }
+
+                if (!pinnedPeer.equals(source)) {
+                    sendUnknownTIDError(dp);
+                    continue; 
+                }
+
+                TFTPPacket packet = parse(dp.getData(), dp.getLength());
+                if (!expected.isInstance(packet)) {
+                    throw new ProtocolException(
+                        "Unexpected packet type. Expected " + expected.getSimpleName()
+                        + " but got " + packet.getClass().getSimpleName());
+                }
+
+                @SuppressWarnings("unchecked")
+                T typed = (T) packet;
+                return typed;
+            }
+        } catch (SocketTimeoutException e) {
+            throw e;
+        } finally {
+            try { socket.setSoTimeout(previous); } catch (Exception ignore) {}
+        }
+    }
+
+    public <T extends TFTPPacket> T receive(Class<T> expected) throws IOException, ProtocolException {
+        return receive(expected, DEFAULT_TIMEOUT_MS);
+    }
+
+    public void close() {
+        socket.close();
+    }
+
+    private InetSocketAddress toInetSocketAddress(SocketAddress sa) {
+        if (sa instanceof InetSocketAddress) return (InetSocketAddress) sa;
+        throw new IllegalArgumentException("Unsupported SocketAddress type: " + sa);
+    }
+
+    private TFTPPacket parse(byte[] data, int length) throws ProtocolException {
+        if (length < 2) {
+            throw new ProtocolException("Datagram too short for opcode.");
+        }
+        short opcode = ByteBuffer.wrap(data, 0, 2).getShort();
+        byte[] exact = Arrays.copyOf(data, length);
+
+        switch (opcode) {
+            case TFTPPacket.OP_RRQ:   return new RRQPacket(exact);
+            case TFTPPacket.OP_WRQ:   return new WRQPacket(exact);
+            case TFTPPacket.OP_DATA:  return new DATAPacket(exact);
+            case TFTPPacket.OP_ACK:   return new ACKPacket(exact);
+            case TFTPPacket.OP_ERROR: return new ERRORPacket(exact);
+            default:
+                throw new ProtocolException("Illegal TFTP operation. Unknown opcode: " + opcode);
+        }
+    }
+
+    private void sendUnknownTIDError(DatagramPacket stray) {
+        try {
+            // Build ERROR packet manually: opcode=5, errorCode=5, message="Unknown transfer ID."
+            byte[] msg = "Unknown transfer ID.".getBytes();
+            ByteBuffer buf = ByteBuffer.allocate(4 + msg.length + 1);
+            buf.putShort((short) 5);  // Opcode for ERROR
+            buf.putShort((short) 5);  // Error code 5 = Unknown transfer ID
+            buf.put(msg);
+            buf.put((byte) 0);        // Null terminator for message
+            byte[] payload = buf.array();
+
+            DatagramPacket dp = new DatagramPacket(
+                payload,
+                payload.length,
+                stray.getAddress(),
+                stray.getPort()
+            );
+            socket.send(dp);
+        } catch (Exception ignore) {
+            // best effort only
+        }
+    }
+
+
     public static class ProtocolException extends Exception {
         public ProtocolException(String msg) { super(msg); }
     }
