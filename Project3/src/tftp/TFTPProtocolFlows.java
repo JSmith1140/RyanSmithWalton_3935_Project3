@@ -1,92 +1,109 @@
-package tftp.protocol;
-
 import java.io.*;
-import java.net.*;
-import tftp.channel.*;
-import tftp.packets.*;
 
-
+/**
+ * Implements the two main TFTP data subprotocol flows:
+ *  - receiveFile(): for handling RRQ (receiving a file)
+ *  - sendFile(): for handling WRQ (sending a file)
+ *
+ * Built on top of the ReliableChannel abstraction.
+ */
 public class TFTPProtocolFlows {
 
     private static final int BLOCK_SIZE = 512;
 
-    private ReliableChannel channel;
-    private boolean isServer;
+    private final ReliableChannel channel;
+    private final boolean isServer;
 
     public TFTPProtocolFlows(ReliableChannel channel, boolean isServer) {
         this.channel = channel;
         this.isServer = isServer;
     }
 
-    public void receiveFile(String filename, FileOutputStream output) throws IOException, TFTPErrorException {
-        int expectedBlock = 1;
+    /**
+     * Receives a file (used when processing a Read Request).
+     * The remote side sends DATA packets; this side sends ACKs.
+     */
+    public void receiveFile(String filename, FileOutputStream output)
+            throws IOException, TFTPErrorException {
 
-        while (true) {
-            TFTPPacket packet = channel.receive();
+        short expectedBlock = 1;
 
-            if (packet instanceof ErrorPacket) {
-                throw new TFTPErrorException(((ErrorPacket) packet).getErrorMessage());
+        try {
+            while (true) {
+                DATAPacket data = channel.receive(DATAPacket.class);
+
+                // Correct block
+                if (data.getBlockNumber() == expectedBlock) {
+                    output.write(data.getData());
+                    output.flush();
+
+                    // Send ACK
+                    ACKPacket ack = new ACKPacket(expectedBlock);
+                    channel.send(ack);
+
+                    expectedBlock++;
+
+                    // End of transfer (last block < 512 bytes)
+                    if (data.getData().length < BLOCK_SIZE) {
+                        break;
+                    }
+                }
+                // Duplicate block (ACK again)
+                else if (data.getBlockNumber() < expectedBlock) {
+                    ACKPacket ack = new ACKPacket(data.getBlockNumber());
+                    channel.send(ack);
+                }
+                else {
+                    throw new TFTPErrorException("Out-of-order DATA block received.");
+                }
             }
-
-            if (!(packet instanceof DataPacket)) {
-                throw new TFTPErrorException("Unexpected packet type during file receive.");
-            }
-
-            DataPacket data = (DataPacket) packet;
-
-
-            if (data.getBlockNumber() != expectedBlock) {
-                channel.send(new AckPacket((short) (expectedBlock - 1)));
-                continue;
-            }
-
-            byte[] dataBytes = data.getData();
-            output.write(dataBytes);
-
-
-            channel.send(new AckPacket((short) expectedBlock));
-
-            if (dataBytes.length < BLOCK_SIZE) {
-
-                break;
-            }
-
-            expectedBlock++;
+        } catch (ReliableChannel.ProtocolException e) {
+            throw new TFTPErrorException("Protocol error while receiving file: " + e.getMessage());
+        } finally {
+            output.close();
         }
     }
 
+    /**
+     * Sends a file (used when processing a Write Request).
+     * This side sends DATA packets; the remote side sends ACKs.
+     */
+    public void sendFile(String filename, FileInputStream input)
+            throws IOException, TFTPErrorException {
 
-    public void sendFile(String filename, FileInputStream input) throws IOException, TFTPErrorException {
-        int blockNumber = 1;
+        short blockNumber = 1;
         byte[] buffer = new byte[BLOCK_SIZE];
         int bytesRead;
 
-        while ((bytesRead = input.read(buffer)) != -1) {
-            byte[] dataToSend = (bytesRead == BLOCK_SIZE) ? buffer : java.util.Arrays.copyOf(buffer, bytesRead);
-            DataPacket dataPacket = new DataPacket((short) blockNumber, dataToSend);
+        try {
+            while (true) {
+                bytesRead = input.read(buffer);
+                if (bytesRead == -1) bytesRead = 0;
 
-            channel.send(dataPacket);
+                byte[] dataToSend = new byte[bytesRead];
+                System.arraycopy(buffer, 0, dataToSend, 0, bytesRead);
 
-            TFTPPacket response = channel.receive();
+                DATAPacket dataPacket = new DATAPacket(blockNumber, dataToSend);
+                channel.send(dataPacket);
 
-            if (response instanceof ErrorPacket) {
-                throw new TFTPErrorException(((ErrorPacket) response).getErrorMessage());
+                // Wait for ACK
+                ACKPacket ack = channel.receive(ACKPacket.class);
+
+                if (ack.getBlockNumber() != blockNumber) {
+                    throw new TFTPErrorException("ACK block number mismatch.");
+                }
+
+                // End of file (short block)
+                if (bytesRead < BLOCK_SIZE) {
+                    break;
+                }
+
+                blockNumber++;
             }
-
-            if (!(response instanceof AckPacket)) {
-                throw new TFTPErrorException("Expected ACK, received unexpected packet.");
-            }
-
-            AckPacket ack = (AckPacket) response;
-            if (ack.getBlockNumber() != blockNumber) {
-                throw new TFTPErrorException("ACK block mismatch.");
-            }
-
-            if (bytesRead < BLOCK_SIZE) {
-                break;
-            }
-
-            blockNumber++;
+        } catch (ReliableChannel.ProtocolException e) {
+            throw new TFTPErrorException("Protocol error while sending file: " + e.getMessage());
+        } finally {
+            input.close();
         }
     }
 }
