@@ -27,4 +27,15 @@ public class DATAPacket extends TFTPPacket {
         buf.put(data);
         return buf.array();
     }
+
+public short getBlockNumber() {
+    return blockNumber;
+}
+
+public byte[] getData() {
+    return data;
+}
+
+
+
 }
