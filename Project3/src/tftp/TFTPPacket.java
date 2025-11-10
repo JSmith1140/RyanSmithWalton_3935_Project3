@@ -1,3 +1,4 @@
+package tftp;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
@@ -44,3 +45,4 @@ public abstract class TFTPPacket {
         return new DatagramPacket(data, data.length, address, port);
     }  
 }
+
