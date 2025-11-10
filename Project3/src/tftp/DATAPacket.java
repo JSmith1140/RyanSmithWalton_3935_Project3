@@ -1,3 +1,4 @@
+package tftp;
 import java.nio.ByteBuffer;
 
 public class DATAPacket extends TFTPPacket {
@@ -39,3 +40,4 @@ public byte[] getData() {
 
 
 }
+
