@@ -2,21 +2,25 @@ package client;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.DatagramSocket;
 
+import tftp.ReliableChannel;
+import tftp.TFTPProtocolFlows;   
+import tftp.RRQPacket;
+import tftp.WRQPacket;
+import tftp.TFTPErrorException;
 
 public class TftpClient {
-
     private static final int DEFAULT_PORT = 69;
 
     private static void usage() {
         System.out.println("Usage:\n" +
-                "  tftp --get <filename> --server <addr>[:port]\n" +
-                "  tftp --put <filename> --server <addr>[:port]\n" +
-                "  tftp --help\n");
+            "  tftp --get <filename> --server <addr>[:port]\n" +
+            "  tftp --put <filename> --server <addr>[:port]\n" +
+            "  tftp --help\n");
     }
 
     public static void main(String[] args) {
@@ -52,27 +56,25 @@ public class TftpClient {
             InetAddress addr = InetAddress.getByName(host);
             SocketAddress server = new InetSocketAddress(addr, port);
 
-            java.net.DatagramSocket socket = new java.net.DatagramSocket();
+            DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(2000);
 
-            ReliableChannel channel = new ReliableChannel(socket, false);
-            channel.send(server);
+            ReliableChannel channel = new ReliableChannel(socket);
+            channel.setPinnedPeer(server);                
 
-            TftpProtocolFlows flows = new TftpProtocolFlows(channel, /*isServer=*/false);
+            TFTPProtocolFlows flows = new TFTPProtocolFlows(channel, /*isServer=*/false);
 
             if (isGet) {
-                TftpCore.RRQPacket rrq = new TftpCore.RRQPacket(filename);
-                channel.send(rrq);
-
+                RRQPacket rrq = new RRQPacket(filename);
+                channel.send(rrq);                        
                 try (FileOutputStream fos = new FileOutputStream(filename)) {
                     flows.receiveFile(filename, fos);
                 }
                 System.out.println("Downloaded: " + filename);
             } else {
-                
                 try (FileInputStream fis = new FileInputStream(filename)) {
-                    TftpCore.WRQPacket wrq = new TftpCore.WRQPacket(filename);
-                    channel.send(wrq);
+                    WRQPacket wrq = new WRQPacket(filename);
+                    channel.send(wrq);                    
                     flows.sendFile(filename, fis);
                 }
                 System.out.println("Uploaded: " + filename);
@@ -81,10 +83,12 @@ public class TftpClient {
             channel.close();
         } catch (TFTPErrorException te) {
             System.err.println("TFTP Error: " + te.getMessage());
-        } catch (ReliableChannel.ProtocolException pe) {
-            System.err.println("Protocol Error: " + pe.getMessage());
         } catch (java.io.FileNotFoundException fnf) {
             System.err.println("IO Error: File does not exist.");
+        } catch (java.net.SocketTimeoutException ste) {
+            System.err.println("Timeout: " + ste.getMessage());
+        } catch (java.io.IOException ioe) {
+            System.err.println("IO Error: " + ioe.getMessage());
         } catch (Exception e) {
             System.err.println("Fatal: " + e.getMessage());
             e.printStackTrace(System.err);
@@ -92,7 +96,7 @@ public class TftpClient {
     }
 
     private static boolean contains(String[] a, String flag) {
-        for (String s : a) if (s.equalsIgnoreCase(flag)) return true; 
+        for (String s : a) if (s.equalsIgnoreCase(flag)) return true;
         return false;
     }
 
@@ -103,4 +107,3 @@ public class TftpClient {
         return null;
     }
 }
-
