@@ -1,3 +1,4 @@
+package tftp;
 import java.nio.ByteBuffer;
 
 public class ERRORPacket extends TFTPPacket{
@@ -57,3 +58,4 @@ public class ERRORPacket extends TFTPPacket{
     }
 
 }
+
