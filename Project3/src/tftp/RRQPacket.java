@@ -1,3 +1,4 @@
+package tftp;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
@@ -37,3 +38,4 @@ public class RRQPacket extends TFTPPacket {
         return -1;
     }
 }
+
