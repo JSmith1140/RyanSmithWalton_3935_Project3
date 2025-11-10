@@ -1,4 +1,4 @@
-
+package tftp;
 
 public class TFTPErrorException extends Exception {
     public TFTPErrorException(String message) {
