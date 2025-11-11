@@ -1,0 +1,5 @@
+{
+    "data-dir":"data",
+    "port":5000,
+    "log": "tftpd.log"
+}
