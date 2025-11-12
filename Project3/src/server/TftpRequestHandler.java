@@ -58,6 +58,7 @@ public class TftpRequestHandler implements Runnable {
 
     private void sendFile(DatagramSocket socket, Path file, InetAddress addr, int port) throws IOException, TftpErrorException {
         if (!Files.exists(file)) {
+            lg.log("(TFTP Error) File " + file.getFileName() + " not found");
             throw new TftpErrorException("File not found");
         }
 
@@ -80,10 +81,15 @@ public class TftpRequestHandler implements Runnable {
                 if (bytesRead < 512) break;
                 blockNum++;
             }
+            lg.log("transmitted file " + file.getFileName() + " to " + addr.getHostName());
         }
     }
 
     private void receiveFile(DatagramSocket socket, Path file, InetAddress addr, int port) throws IOException, TftpErrorException {
+        if (Files.exists(file)) {
+            lg.log("(TFTP Error) File " + file.getFileName() + " already exists");
+            throw new TftpErrorException("File already exists");
+        }
 
         try (OutputStream out = Files.newOutputStream(file)) {
             short blockNum = 0;
@@ -106,6 +112,7 @@ public class TftpRequestHandler implements Runnable {
 
                 if (dataLen < 512) break;
             }
+            lg.log("received file " + file.getFileName() + " from " + addr.getHostName());
         }
     }
 
