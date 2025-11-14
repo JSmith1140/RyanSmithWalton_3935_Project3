@@ -40,16 +40,6 @@ public class ReliableChannel {
         send(pkt, pinnedPeer);
     }
 
-    /**
-     * Receive the next packet, ensuring its type matches 'expected'.
-     * Pins TID on first inbound packet. Rejects unknown TIDs with ERROR 5.
-     *
-     * @param expected The concrete packet class expected next (e.g., ACKPacket.class).
-     * @param timeoutMs Socket receive timeout in milliseconds (use a positive value).
-     * @return A parsed packet of type T.
-     * @throws IOException on socket errors or timeout.
-     * @throws ProtocolException if the opcode doesn't match the expected class.
-     */
     public <T extends TFTPPacket> T receive(Class<T> expected, int timeoutMs)
             throws IOException, ProtocolException {
 
@@ -149,3 +139,4 @@ public class ReliableChannel {
         public ProtocolException(String msg) { super(msg); }
     }
 }
+
