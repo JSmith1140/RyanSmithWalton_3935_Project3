@@ -12,9 +12,10 @@ import tftp.TFTPProtocolFlows;
 import tftp.RRQPacket;
 import tftp.WRQPacket;
 import tftp.TFTPErrorException;
+import tftp.ACKPacket;
 
 public class Client {
-    private static final int DEFAULT_PORT = 69;
+    private static final int DEFAULT_PORT = 5000;
 
     private static void usage() {
         System.out.println("Usage:\n" +
@@ -60,9 +61,7 @@ public class Client {
             socket.setSoTimeout(2000);
 
             ReliableChannel channel = new ReliableChannel(socket);
-
-
-            TFTPProtocolFlows flows = new TFTPProtocolFlows(channel, /*isServer=*/false);
+            TFTPProtocolFlows flows = new TFTPProtocolFlows(channel, false);
 
             if (isGet) {
                 RRQPacket rrq = new RRQPacket(filename);
@@ -74,7 +73,19 @@ public class Client {
             } else {
                 try (FileInputStream fis = new FileInputStream(filename)) {
                     WRQPacket wrq = new WRQPacket(filename);
+
+                    System.out.println("[Client] Sending WRQ to " + server);
                     channel.send(wrq, server);
+
+                    System.out.println("[Client] Waiting for ACK(0)...");
+                    ACKPacket ack0 = channel.receive(ACKPacket.class);
+                    System.out.println("[Client] Got ACK(" + ack0.getBlockNumber() + ")");
+
+                    if (ack0.getBlockNumber() != 0) {
+                        throw new TFTPErrorException(
+                            "Expected ACK(0) from server, got block " + ack0.getBlockNumber());
+                    }
+
                     flows.sendFile(filename, fis);
                 }
                 System.out.println("Uploaded: " + filename);
