@@ -20,6 +20,17 @@ public class Server {
     private static Path dataDir;
     private static int port;
 
+    /**
+     * Entry point for the TFTP server.
+     * <p>
+     * Supports optional command-line arguments:
+     * <ul>
+     *   <li><code>--config &lt;file&gt;</code> – specifies a configuration file</li>
+     *   <li><code>--help</code> – prints usage information and exits</li>
+     * </ul>
+     *
+     * @param args command-line arguments supplied to the program
+     */
     public static void main(String[] args) {
         String configFile = "config-2.json";
 
@@ -42,6 +53,12 @@ public class Server {
         startServer(configFile);
     }
 
+    /**
+     * Starts the TFTP server by loading configuration, initializing logging,
+     * creating the thread pool, and entering the main server loop.
+     *
+     * @param configFile the path to the configuration JSON file
+     */
     private static void startServer(String configFile) {
     try {
         JSONObject config = loadConfig(configFile);
@@ -72,6 +89,13 @@ public class Server {
     }
 }
 
+    /**
+     * Loads and parses the server configuration JSON file.
+     *
+     * @param configFile path to the JSON config file
+     * @return the parsed {@link JSONObject} containing configuration values
+     * @throws IOException if the file cannot be read or parsed
+     */
 private static JSONObject loadConfig(String configFile) throws IOException {
     File file = new File(configFile);
     try {
@@ -95,6 +119,16 @@ private static JSONObject loadConfig(String configFile) throws IOException {
     }
 }
 
+    /**
+     * The main server loop.
+     * <p>
+     * Creates a {@link DatagramSocket}, listens for incoming TFTP packets,
+     * inspects the opcode, and dispatches requests to worker threads.
+     * <p>
+     * Only RRQ (opcode 1) and WRQ (opcode 2) packets are accepted; all other
+     * opcodes are logged and ignored.
+     */
+
     private static void runServerLoop() {
         try (DatagramSocket socket = new DatagramSocket(port)) {
             logger.log("Server listening on port " + port);
@@ -117,6 +151,9 @@ private static JSONObject loadConfig(String configFile) throws IOException {
         }
     }
 
+    /**
+     * Prints command-line usage instructions to standard output.
+     */
     private static void printHelp() {
         System.out.println("""
                 usage:
