@@ -1,0 +1,207 @@
+2025-11-11 22:19:16 tftpd: tftpd starting...
+2025-11-11 22:19:16 tftpd: Port: 5000
+2025-11-11 22:19:16 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3\Project3\data
+2025-11-11 22:19:16 tftpd: Thread pool size: 10
+2025-11-11 22:19:16 tftpd: Server listening on port 5000
+2025-11-11 22:19:38 tftpd: RRQ from /127.0.0.1:49667 -> file.txt
+2025-11-11 22:19:38 tftpd: TFTP Error: File not found
+2025-11-11 22:28:46 tftpd: tftpd starting...
+2025-11-11 22:28:46 tftpd: Port: 5000
+2025-11-11 22:28:46 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3\Project3\data
+2025-11-11 22:28:46 tftpd: Thread pool size: 10
+2025-11-11 22:28:46 tftpd: Server listening on port 5000
+2025-11-11 22:30:08 tftpd: RRQ from /127.0.0.1:60757 -> file.txt
+2025-11-11 22:48:20 tftpd: tftpd starting...
+2025-11-11 22:48:20 tftpd: Port: 5000
+2025-11-11 22:48:20 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3\Project3\data
+2025-11-11 22:48:20 tftpd: Thread pool size: 10
+2025-11-11 22:48:20 tftpd: Server listening on port 5000
+2025-11-11 22:49:19 tftpd: tftpd starting...
+2025-11-11 22:49:19 tftpd: Port: 5000
+2025-11-11 22:49:19 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3\Project3\data
+2025-11-11 22:49:19 tftpd: Thread pool size: 10
+2025-11-11 22:49:19 tftpd: Server listening on port 5000
+2025-11-11 22:51:21 tftpd: tftpd starting...
+2025-11-11 22:51:21 tftpd: Port: 5000
+2025-11-11 22:51:21 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3\Project3\data
+2025-11-11 22:51:21 tftpd: Thread pool size: 10
+2025-11-11 22:51:21 tftpd: Server listening on port 5000
+2025-11-11 22:51:44 tftpd: RRQ from /127.0.0.1:59335 -> file.txt
+2025-11-11 22:53:16 tftpd: WRQ from /127.0.0.1:63870 -> greeting.txt
+2025-11-11 22:53:33 tftpd: WRQ from /127.0.0.1:53189 -> exact512.txt
+2025-11-11 22:53:34 tftpd: RRQ from /127.0.0.1:53191 -> exact512.txt
+2025-11-14 14:45:05 tftpd: tftpd starting...
+2025-11-14 14:45:05 tftpd: Port: 5000
+2025-11-14 14:45:05 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 14:45:05 tftpd: Thread pool size: 10
+2025-11-14 14:45:05 tftpd: Server listening on port 5000
+2025-11-14 14:45:43 tftpd: RRQ from /127.0.0.1:51177 -> file.txt
+2025-11-14 14:45:43 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 14:46:20 tftpd: WRQ from /127.0.0.1:62631 -> greeting.txt
+2025-11-14 14:46:20 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 14:46:20 tftpd: TFTP Error: File already exists
+2025-11-14 15:08:55 tftpd: tftpd starting...
+2025-11-14 15:08:55 tftpd: Port: 5000
+2025-11-14 15:08:55 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 15:08:55 tftpd: Thread pool size: 10
+2025-11-14 15:08:55 tftpd: Server listening on port 5000
+2025-11-14 15:09:36 tftpd: RRQ from /127.0.0.1:54245 -> file.txt
+2025-11-14 15:09:36 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 15:09:58 tftpd: WRQ from /127.0.0.1:55803 -> greeting.txt
+2025-11-14 15:09:58 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 15:09:58 tftpd: TFTP Error: File already exists
+2025-11-14 18:06:26 tftpd: tftpd starting...
+2025-11-14 18:06:26 tftpd: Port: 5000
+2025-11-14 18:06:26 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:06:26 tftpd: Thread pool size: 10
+2025-11-14 18:06:26 tftpd: Server listening on port 5000
+2025-11-14 18:06:39 tftpd: WRQ from /127.0.0.1:59961 -> greeting.txt
+2025-11-14 18:06:39 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 18:06:39 tftpd: TFTP Error: File already exists
+2025-11-14 18:25:27 tftpd: tftpd starting...
+2025-11-14 18:25:27 tftpd: Port: 5000
+2025-11-14 18:25:27 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:25:27 tftpd: Thread pool size: 10
+2025-11-14 18:25:27 tftpd: Server listening on port 5000
+2025-11-14 18:26:06 tftpd: tftpd starting...
+2025-11-14 18:26:06 tftpd: Port: 5000
+2025-11-14 18:26:06 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:26:06 tftpd: Thread pool size: 10
+2025-11-14 18:26:06 tftpd: Server listening on port 5000
+2025-11-14 18:27:04 tftpd: tftpd starting...
+2025-11-14 18:27:04 tftpd: Port: 5000
+2025-11-14 18:27:04 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:27:04 tftpd: Thread pool size: 10
+2025-11-14 18:27:04 tftpd: Server listening on port 5000
+2025-11-14 18:27:14 tftpd: WRQ from /127.0.0.1:60965 -> greeting.txt
+2025-11-14 18:27:14 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 18:27:14 tftpd: TFTP Error: File already exists
+2025-11-14 18:41:14 tftpd: tftpd starting...
+2025-11-14 18:41:14 tftpd: Port: 5000
+2025-11-14 18:41:14 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:41:14 tftpd: Thread pool size: 10
+2025-11-14 18:41:14 tftpd: Server listening on port 5000
+2025-11-14 18:43:10 tftpd: tftpd starting...
+2025-11-14 18:43:10 tftpd: Port: 5000
+2025-11-14 18:43:10 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 18:43:10 tftpd: Thread pool size: 10
+2025-11-14 18:43:10 tftpd: Server listening on port 5000
+2025-11-14 19:25:36 tftpd: tftpd starting...
+2025-11-14 19:25:36 tftpd: Port: 5000
+2025-11-14 19:25:36 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 19:25:36 tftpd: Thread pool size: 10
+2025-11-14 19:25:36 tftpd: Server listening on port 5000
+2025-11-14 19:26:08 tftpd: RRQ from /127.0.0.1:61093 -> file.txt
+2025-11-14 19:26:08 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 19:26:20 tftpd: WRQ from /127.0.0.1:53868 -> greeting.txt
+2025-11-14 19:26:20 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 19:26:20 tftpd: TFTP Error: File already exists
+2025-11-14 19:34:51 tftpd: tftpd starting...
+2025-11-14 19:34:51 tftpd: Port: 5000
+2025-11-14 19:34:51 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 19:34:51 tftpd: Thread pool size: 10
+2025-11-14 19:34:51 tftpd: Server listening on port 5000
+2025-11-14 19:38:43 tftpd: tftpd starting...
+2025-11-14 19:38:43 tftpd: Port: 5000
+2025-11-14 19:38:43 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 19:38:43 tftpd: Thread pool size: 10
+2025-11-14 19:38:43 tftpd: Server listening on port 5000
+2025-11-14 20:02:46 tftpd: tftpd starting...
+2025-11-14 20:02:46 tftpd: Port: 5000
+2025-11-14 20:02:46 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:02:46 tftpd: Thread pool size: 10
+2025-11-14 20:02:46 tftpd: Server listening on port 5000
+2025-11-14 20:03:12 tftpd: tftpd starting...
+2025-11-14 20:03:12 tftpd: Port: 5000
+2025-11-14 20:03:12 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:03:12 tftpd: Thread pool size: 10
+2025-11-14 20:03:12 tftpd: Server listening on port 5000
+2025-11-14 20:06:31 tftpd: tftpd starting...
+2025-11-14 20:06:31 tftpd: Port: 5000
+2025-11-14 20:06:31 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:06:31 tftpd: Thread pool size: 10
+2025-11-14 20:06:31 tftpd: Server socket error: Address already in use: bind
+2025-11-14 20:07:21 tftpd: RRQ from /127.0.0.1:56603 -> file.txt
+2025-11-14 20:07:21 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 20:07:44 tftpd: WRQ from /127.0.0.1:57875 -> greeting.txt
+2025-11-14 20:07:44 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 20:07:44 tftpd: TFTP Error: File already exists
+2025-11-14 20:09:57 tftpd: tftpd starting...
+2025-11-14 20:09:57 tftpd: Port: 5000
+2025-11-14 20:09:57 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:09:57 tftpd: Thread pool size: 10
+2025-11-14 20:09:57 tftpd: Server listening on port 5000
+2025-11-14 20:10:27 tftpd: RRQ from /127.0.0.1:56631 -> file.txt
+2025-11-14 20:10:27 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 20:10:47 tftpd: WRQ from /127.0.0.1:59355 -> greeting.txt
+2025-11-14 20:10:47 tftpd: (TFTP Error) File greeting.txt already exists
+2025-11-14 20:10:47 tftpd: TFTP Error: File already exists
+2025-11-14 20:18:08 tftpd: tftpd starting...
+2025-11-14 20:18:08 tftpd: Port: 5000
+2025-11-14 20:18:08 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:18:08 tftpd: Thread pool size: 10
+2025-11-14 20:18:08 tftpd: Server listening on port 5000
+2025-11-14 20:18:47 tftpd: RRQ from /127.0.0.1:64592 -> file.txt
+2025-11-14 20:18:47 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 20:19:02 tftpd: WRQ from /127.0.0.1:60400 -> greeting.txt
+2025-11-14 20:19:02 tftpd: received file greeting.txt from 127.0.0.1
+2025-11-14 20:21:51 tftpd: tftpd starting...
+2025-11-14 20:21:51 tftpd: Port: 5000
+2025-11-14 20:21:51 tftpd: Data directory: C:\Users\anton\Downloads\RyanSmithWalton_3935_Project3-main (1)\RyanSmithWalton_3935_Project3-main\Project3\data
+2025-11-14 20:21:51 tftpd: Thread pool size: 10
+2025-11-14 20:21:51 tftpd: Server listening on port 5000
+2025-11-14 20:22:38 tftpd: RRQ from /127.0.0.1:61804 -> file.txt
+2025-11-14 20:22:38 tftpd: (TFTP Error) File file.txt not found
+2025-11-14 20:22:38 tftpd: TFTP Error: File not found
+2025-11-14 20:22:55 tftpd: WRQ from /127.0.0.1:61009 -> greeting.txt
+2025-11-14 20:22:55 tftpd: received file greeting.txt from 127.0.0.1
+2025-11-14 20:51:08 tftpd: tftpd starting...
+2025-11-14 20:51:08 tftpd: Port: 5000
+2025-11-14 20:51:08 tftpd: Data directory: C:\Users\adamw\Downloads\Project3-20251114T203056Z-1-001\Project3\data
+2025-11-14 20:51:08 tftpd: Thread pool size: 10
+2025-11-14 20:51:08 tftpd: Server listening on port 5000
+2025-11-14 20:51:25 tftpd: WRQ from /127.0.0.1:51204 -> greeting.txt
+2025-11-14 20:51:25 tftpd: received file greeting.txt from 127.0.0.1
+2025-11-14 20:51:42 tftpd: RRQ from /127.0.0.1:57091 -> file.txt
+2025-11-14 20:51:42 tftpd: (TFTP Error) File file.txt not found
+2025-11-14 20:51:42 tftpd: TFTP Error: File not found
+2025-11-14 20:52:23 tftpd: RRQ from /127.0.0.1:53979 -> file.txt
+2025-11-14 20:52:23 tftpd: (TFTP Error) File file.txt not found
+2025-11-14 20:52:23 tftpd: TFTP Error: File not found
+2025-11-14 20:58:38 tftpd: tftpd starting...
+2025-11-14 20:58:38 tftpd: Port: 5000
+2025-11-14 20:58:38 tftpd: Data directory: C:\Users\adamw\Downloads\Project3-20251114T203056Z-1-001\Project3\data
+2025-11-14 20:58:38 tftpd: Thread pool size: 10
+2025-11-14 20:58:38 tftpd: Server listening on port 5000
+2025-11-14 20:59:12 tftpd: RRQ from /127.0.0.1:51906 -> file.txt
+2025-11-14 20:59:12 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 20:59:23 tftpd: WRQ from /127.0.0.1:51664 -> greeting.txt
+2025-11-14 20:59:23 tftpd: received file greeting.txt from 127.0.0.1
+2025-11-14 21:00:58 tftpd: WRQ from /127.0.0.1:53013 -> exact512.txt
+2025-11-14 21:00:58 tftpd: received file exact512.txt from 127.0.0.1
+2025-11-14 21:00:58 tftpd: RRQ from /127.0.0.1:53015 -> exact512.txt
+2025-11-14 21:00:58 tftpd: transmitted file exact512.txt to 127.0.0.1
+2025-11-14 21:05:37 tftpd: RRQ from /127.0.0.1:62547 -> file.txt
+2025-11-14 21:05:37 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 21:06:39 tftpd: RRQ from /127.0.0.1:50065 -> file.txt
+2025-11-14 21:06:39 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 21:06:44 tftpd: RRQ from /127.0.0.1:54833 -> file.txt
+2025-11-14 21:06:44 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 21:25:13 tftpd: tftpd starting...
+2025-11-14 21:25:13 tftpd: Port: 5000
+2025-11-14 21:25:13 tftpd: Data directory: C:\Users\adamw\Downloads\Project3-20251114T203056Z-1-001\Project3\data
+2025-11-14 21:25:13 tftpd: Thread pool size: 10
+2025-11-14 21:25:13 tftpd: Server listening on port 5000
+2025-11-14 21:27:41 tftpd: tftpd starting...
+2025-11-14 21:27:41 tftpd: Port: 5000
+2025-11-14 21:27:41 tftpd: Data directory: C:\Users\adamw\Downloads\Project3-20251114T203056Z-1-001\Project3\data
+2025-11-14 21:27:41 tftpd: Thread pool size: 10
+2025-11-14 21:27:41 tftpd: Server listening on port 5000
+2025-11-14 21:28:08 tftpd: RRQ from /127.0.0.1:63093 -> file.txt
+2025-11-14 21:28:08 tftpd: transmitted file file.txt to 127.0.0.1
+2025-11-14 21:29:11 tftpd: WRQ from /127.0.0.1:65123 -> greeting.txt
+2025-11-14 21:29:11 tftpd: received file greeting.txt from 127.0.0.1
+2025-11-14 21:29:55 tftpd: WRQ from /127.0.0.1:52746 -> exact512.txt
+2025-11-14 21:29:55 tftpd: received file exact512.txt from 127.0.0.1
+2025-11-14 21:30:06 tftpd: RRQ from /127.0.0.1:57773 -> exact512.txt
+2025-11-14 21:30:06 tftpd: transmitted file exact512.txt to 127.0.0.1
