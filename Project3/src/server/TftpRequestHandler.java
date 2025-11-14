@@ -2,11 +2,14 @@ package server;
 
 import merrimackutil.net.Log;
 
-
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 
+import tftp.ReliableChannel;
+import tftp.TFTPProtocolFlows;
+import tftp.ACKPacket;
+import tftp.TFTPErrorException;
 
 public class TftpRequestHandler implements Runnable {
 
@@ -22,97 +25,84 @@ public class TftpRequestHandler implements Runnable {
 
     @Override
     public void run() {
-        try (DatagramSocket socket = new DatagramSocket()) {
-            InetAddress clientAddr = request.getAddress();
-            int clientPort = request.getPort();
-            byte[] data = request.getData();
+        InetAddress clientAddr = request.getAddress();
+        int clientPort = request.getPort();
+        byte[] data = request.getData();
 
-            short opcode = (short)(((data[0] & 0xFF) << 8) | (data[1] & 0xFF));
+        short opcode = (short)(((data[0] & 0xFF) << 8) | (data[1] & 0xFF));
+        String filename = extractFilename(data);
+        Path filePath = dataDir.resolve(filename).normalize();
 
-            String filename = extractFilename(data);
-            Path filePath = dataDir.resolve(filename).normalize();
+        System.out.println("[Handler] New request from " + clientAddr + ":" + clientPort +
+                           " opcode=" + opcode + " file=" + filename);
 
+        try (DatagramSocket dataSocket = new DatagramSocket()) {
+
+            // Stop ../../ style paths
             if (!filePath.startsWith(dataDir)) {
-                throw new TftpErrorException("Access violation");
+                throw new server.TftpErrorException("Access violation");
             }
 
+            SocketAddress peer = new InetSocketAddress(clientAddr, clientPort);
+            ReliableChannel channel = new ReliableChannel(dataSocket);
+            channel.setPinnedPeer(peer);
+
+            TFTPProtocolFlows flows = new TFTPProtocolFlows(channel, /*isServer=*/true);
+
             if (opcode == 1) {
+                // RRQ – DOWNLOAD
                 lg.log("RRQ from " + clientAddr + ":" + clientPort + " -> " + filename);
-                sendFile(socket, filePath, clientAddr, clientPort);
+
+                if (!Files.exists(filePath)) {
+                    lg.log("(TFTP Error) File " + filePath.getFileName() + " not found");
+                    throw new server.TftpErrorException("File not found");
+                }
+
+                try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+                    flows.sendFile(filename, fis);
+                }
+
+                lg.log("transmitted file " + filePath.getFileName()
+                       + " to " + clientAddr.getHostName());
+
             } else if (opcode == 2) {
+                // WRQ – UPLOAD
                 lg.log("WRQ from " + clientAddr + ":" + clientPort + " -> " + filename);
-                receiveFile(socket, filePath, clientAddr, clientPort);
+
+                if (Files.exists(filePath)) {
+                    lg.log("(TFTP Error) File " + filePath.getFileName() + " already exists");
+                    throw new server.TftpErrorException("File already exists");
+                }
+
+                // Send ACK(0) from this new TID
+                System.out.println("[Handler] Sending ACK(0) from port " +
+                                   dataSocket.getLocalPort());
+                ACKPacket ack0 = new ACKPacket((short)0);
+                channel.send(ack0);
+
+                try (FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
+                    flows.receiveFile(filename, fos);
+                }
+
+                lg.log("received file " + filePath.getFileName()
+                       + " from " + clientAddr.getHostName());
             } else {
                 lg.log("Invalid opcode received: " + opcode);
             }
 
-        } catch (TftpErrorException e) {
-            lg.log("TFTP Error: " + e.getMessage());
+            channel.close();
 
+        } catch (server.TftpErrorException e) {
+            lg.log("TFTP Error: " + e.getMessage());
+        } catch (TFTPErrorException e) {
+            lg.log("TFTP protocol Error: " + e.getMessage());
+            e.printStackTrace(System.err);
         } catch (IOException e) {
             lg.log("IO Error: " + e.getMessage());
+            e.printStackTrace(System.err);
         } catch (Exception e) {
             lg.log("Unexpected Handler error: " + e.getMessage());
-        }
-    }
-
-    private void sendFile(DatagramSocket socket, Path file, InetAddress addr, int port) throws IOException, TftpErrorException {
-        if (!Files.exists(file)) {
-            lg.log("(TFTP Error) File " + file.getFileName() + " not found");
-            throw new TftpErrorException("File not found");
-        }
-
-        try (InputStream in = Files.newInputStream(file)) {
-            byte[] buffer = new byte[512];
-            short blockNum = 1;
-            int bytesRead;
-
-            while ((bytesRead = in.read(buffer)) != -1) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                baos.write(0);
-                baos.write(3);
-                baos.write((blockNum >> 8) & 0xFF);
-                baos.write(blockNum & 0xFF);
-                baos.write(buffer, 0, bytesRead);
-
-                DatagramPacket dataPacket = new DatagramPacket(baos.toByteArray(), baos.size(), addr, port);
-                socket.send(dataPacket);
-
-                if (bytesRead < 512) break;
-                blockNum++;
-            }
-            lg.log("transmitted file " + file.getFileName() + " to " + addr.getHostName());
-        }
-    }
-
-    private void receiveFile(DatagramSocket socket, Path file, InetAddress addr, int port) throws IOException, TftpErrorException {
-        if (Files.exists(file)) {
-            lg.log("(TFTP Error) File " + file.getFileName() + " already exists");
-            throw new TftpErrorException("File already exists");
-        }
-
-        try (OutputStream out = Files.newOutputStream(file)) {
-            short blockNum = 0;
-
-            while (true) {
-                blockNum++;
-  
-                byte[] ack = {0, 4, (byte)(blockNum >> 8), (byte)(blockNum & 0xFF)};
-                socket.send(new DatagramPacket(ack, ack.length, addr, port));
-
-                byte[] buffer = new byte[516];
-                DatagramPacket dataPacket = new DatagramPacket(buffer, buffer.length);
-                socket.receive(dataPacket);
-
-                int len = dataPacket.getLength();
-                if (len < 4) break;
-
-                int dataLen = len - 4;
-                out.write(buffer, 4, dataLen);
-
-                if (dataLen < 512) break;
-            }
-            lg.log("received file " + file.getFileName() + " from " + addr.getHostName());
+            e.printStackTrace(System.err);
         }
     }
 
