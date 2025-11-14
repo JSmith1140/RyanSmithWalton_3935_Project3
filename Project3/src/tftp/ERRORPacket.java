@@ -17,6 +17,14 @@ public class ERRORPacket extends TFTPPacket{
         "No such user."           
     };
 
+    /**
+     * Constructs an ERRORPacket using the given error code and message.
+     * <p>
+     * If {@code errorMsg} is null, a default TFTP message will be used when possible.
+     *
+     * @param errorCode the TFTP error code that describes the failure
+     * @param errorMsg  the human-readable error message, or {@code null} to use the default
+     */
     public ERRORPacket(short errorCode, String errorMsg) {
         super(OP_ERROR);
         this.errorCode = errorCode;
@@ -29,6 +37,18 @@ public class ERRORPacket extends TFTPPacket{
         }
     }
 
+    /**
+     * Constructs an ERRORPacket by parsing serialized TFTP error packet data.
+     * <p>
+     * Expected format:
+     * <pre>
+     *     2 bytes: opcode (5)
+     *     2 bytes: error code
+     *     N bytes: error message (null-terminated)
+     * </pre>
+     *
+     * @param data the raw packet bytes received from the network
+     */
     public ERRORPacket(byte[] data) {
         super(OP_ERROR);
         ByteBuffer buf = ByteBuffer.wrap(data);
@@ -45,6 +65,19 @@ public class ERRORPacket extends TFTPPacket{
         }
     }
 
+    /**
+     * Serializes this ERROR packet to a byte array suitable for transmission.
+     * <p>
+     * Layout:
+     * <pre>
+     *     2 bytes: opcode (5)
+     *     2 bytes: error code
+     *     N bytes: error message
+     *     1 byte : null terminator
+     * </pre>
+     *
+     * @return a byte array representing the encoded ERROR packet
+     */
     @Override
     public byte[] serialize() {
         byte[] msgBytes = errorMsg.getBytes();
@@ -57,5 +90,4 @@ public class ERRORPacket extends TFTPPacket{
 
         return buf.array();
     }
-
 }
