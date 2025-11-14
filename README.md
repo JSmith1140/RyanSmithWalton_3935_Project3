@@ -6,32 +6,32 @@
 - Jacob Smith
 
 
-SERVER HELP
+# SERVER HELP
 java -cp "out;lib/merrimackutil.jar" server.Server --help
 
-CLIENT HELP
+# CLIENT HELP
 java -cp "out;lib/merrimackutil.jar" client.Client --help
 
 
 
 
-RUN SERVER
+# RUN SERVER
 java -cp "out;lib/merrimackutil.jar" server.Server --config config-2.json
 
-GET file.txt
+# GET file.txt
 java -cp "out;lib/merrimackutil.jar" client.Client --get file.txt --server 127.0.0.1:5000
 
-PUT greeting.txt
+# PUT greeting.txt
 Set-Content -NoNewline -Path .\greeting.txt -Value "hi from client"
 java -cp "out;lib\merrimackutil.jar" client.Client --put greeting.txt --server 127.0.0.1:5000
 Get-Content .\data\greeting.txt
 
-CREATE FILE WITH 512 BYTES
+# CREATE FILE WITH 512 BYTES
 $r = "A" * 512
 Set-Content -NoNewline -Path .\exact512.txt -Value $r
 
-UPLOAD
+# UPLOAD
 java -cp "out;lib/merrimackutil.jar" client.Client --put exact512.txt --server 127.0.0.1:5000
 
-DOWNLOAD
+# DOWNLOAD
 java -cp "out;lib/merrimackutil.jar" client.Client --get exact512.txt --server 127.0.0.1:5000
