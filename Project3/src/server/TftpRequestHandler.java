@@ -17,12 +17,34 @@ public class TftpRequestHandler implements Runnable {
     private final Path dataDir;
     private final Log lg;
 
+    /**
+     * Constructs a new {@code TftpRequestHandler}.
+     *
+     * @param request the initial datagram request received from the client
+     * @param dataDir the base directory for file storage
+     * @param lg      the logger for recording events and errors
+     */
     public TftpRequestHandler(DatagramPacket request, Path dataDir, Log lg) {
         this.request = request;
         this.dataDir = dataDir;
         this.lg = lg;
     }
 
+    /**
+     * Processes the TFTP request associated with this handler.
+     *
+     * <p>This method extracts the opcode and filename, validates the request,
+     * opens a new dedicated data socket (TID), and performs the appropriate
+     * protocol operation:</p>
+     *
+     * <ul>
+     *   <li>Opcode 1 — RRQ: Sends the requested file to the client.</li>
+     *   <li>Opcode 2 — WRQ: Receives an uploaded file from the client.</li>
+     * </ul>
+     *
+     * <p>All exceptions are logged, including TFTP protocol errors,
+     * file system issues, and unexpected runtime errors.</p>
+     */
     @Override
     public void run() {
         InetAddress clientAddr = request.getAddress();
@@ -106,6 +128,15 @@ public class TftpRequestHandler implements Runnable {
         }
     }
 
+    /**
+     * Extracts the filename from a TFTP RRQ/WRQ packet's payload.
+     *
+     * <p>The filename starts at byte 2 and continues until the first
+     * null byte (0), according to TFTP protocol formatting.</p>
+     *
+     * @param data the packet data received from the client
+     * @return the extracted filename as a string
+     */
     private String extractFilename(byte[] data) {
         int i = 2;
         StringBuilder sb = new StringBuilder();
