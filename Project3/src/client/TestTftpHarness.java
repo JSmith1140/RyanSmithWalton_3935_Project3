@@ -15,6 +15,12 @@ public class TestTftpHarness {
     private static final short OP_ACK   = 4;
     private static final short OP_ERROR = 5;
 
+    /**
+     * Main entry point for executing the TFTP test harness.
+     *
+     * @param args unused command-line arguments
+     * @throws Exception if any I/O or network error occurs
+     */
     public static void main(String[] args) throws Exception {
 
         MiniTftpStub stub = new MiniTftpStub();
@@ -70,6 +76,13 @@ public class TestTftpHarness {
         System.out.println("\nDone.");
     }
 
+    /**
+     * Reads an entire file into a string for display.
+     *
+     * @param f the file to read
+     * @return the file contents as a single string
+     * @throws IOException if a read error occurs
+     */
     private static String readAll(File f) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             StringBuilder sb = new StringBuilder();
@@ -79,11 +92,29 @@ public class TestTftpHarness {
     }
 
 
+    /**
+     * A miniature embedded TFTP server used strictly for testing the client.
+     *
+     * <p>This stub implements minimal server logic:</p>
+     * <ul>
+     *     <li>RRQ → sends a fixed block of text as DATA(1).</li>
+     *     <li>WRQ → acknowledges block 0, receives DATA blocks, and saves them locally.</li>
+     *     <li>Other opcodes → responds with an ERROR packet.</li>
+     * </ul>
+     *
+     * <p>The stub operates on a random OS-assigned port and communicates only
+     * with localhost (loopback).</p>
+     */
     private static class MiniTftpStub implements Runnable, Closeable {
         private final DatagramSocket sock;
         private volatile boolean running = true;
         private volatile File lastUploaded;
 
+         /**
+         * Constructs a new MiniTftpStub bound to an ephemeral port.
+         *
+         * @throws SocketException if the underlying socket fails to initialize
+         */
         MiniTftpStub() throws SocketException {
             this.sock = new DatagramSocket(0, InetAddress.getLoopbackAddress());
             this.sock.setSoTimeout(2000);
@@ -92,6 +123,13 @@ public class TestTftpHarness {
         int getPort() { return sock.getLocalPort(); }
         File getLastUploaded() { return lastUploaded; }
 
+        /**
+         * Main stub server loop.
+         *
+         * <p>Receives incoming packets, parses opcodes, and performs
+         * simulated TFTP operations. The loop runs until {@link #close()}
+         * is called.</p>
+         */
         @Override public void run() {
             byte[] buf = new byte[2048];
             while (running) {
@@ -159,13 +197,21 @@ public class TestTftpHarness {
             }
         }
 
+        /**
+         * Stops the stub server and closes its underlying socket.
+         */
         @Override public void close() {
             running = false;
             try { sock.close(); } catch (Exception ignored) {}
         }
 
-   
-
+        /**
+         * Builds a TFTP DATA packet.
+         *
+         * @param block   the block number
+         * @param payload the payload data (up to 512 bytes)
+         * @return the raw packet bytes
+         */
         private static byte[] buildData(int block, byte[] payload) {
             byte[] out = new byte[4 + payload.length];
             putShort(out, 0, OP_DATA);
@@ -174,6 +220,12 @@ public class TestTftpHarness {
             return out;
         }
 
+        /**
+         * Builds a TFTP ACK packet.
+         *
+         * @param block the block number being acknowledged
+         * @return the raw packet bytes
+         */
         private static byte[] buildAck(int block) {
             byte[] out = new byte[4];
             putShort(out, 0, OP_ACK);
@@ -181,6 +233,13 @@ public class TestTftpHarness {
             return out;
         }
 
+        /**
+         * Builds a TFTP ERROR packet.
+         *
+         * @param code the error code
+         * @param msg  the error message
+         * @return the raw packet bytes
+         */
         private static byte[] buildError(int code, String msg) {
             byte[] m = msg.getBytes(StandardCharsets.US_ASCII);
             byte[] out = new byte[4 + m.length + 1];
@@ -191,10 +250,24 @@ public class TestTftpHarness {
             return out;
         }
 
+        /**
+         * Reads a big-endian 16-bit integer from a byte array.
+         *
+         * @param a the byte array
+         * @param i the index of the high byte
+         * @return the decoded short
+         */
         private static short getShort(byte[] a, int i) {
             return (short) (((a[i] & 0xFF) << 8) | (a[i + 1] & 0xFF));
         }
 
+        /**
+         * Stores a big-endian 16-bit integer into a byte array.
+         *
+         * @param a the array to write into
+         * @param i the starting index
+         * @param v the short value to write
+         */
         private static void putShort(byte[] a, int i, short v) {
             a[i] = (byte) ((v >> 8) & 0xFF);
             a[i + 1] = (byte) (v & 0xFF);
